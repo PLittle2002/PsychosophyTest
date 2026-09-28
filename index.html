@@ -606,7 +606,7 @@ function showResult() {
 
   document.getElementById("type").textContent = type;
   document.getElementById("typeName").textContent = info.name;
-  document.getElementById("description").textContent = info.text;
+  document.getElementById("description").innerHTML = info.text;
 
   const typeImage = document.getElementById("typeImage");
   typeImage.src = `images/${type}.png`;
