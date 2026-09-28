@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Psicosofía</title>
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f4f5;
+  color: #18181b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+  line-height: 1.45;
+  margin: 32px 0 28px;
+}
+
+p {
+  line-height: 1.6;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+button:hover {
+  opacity: 0.88;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.primary {
+  background: #18181b;
+  color: white;
+}
+
+.secondary {
+  background: #e4e4e7;
+  color: #18181b;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #71717a;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 7px;
+  background: #e4e4e7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#progressFill {
+  height: 100%;
+  width: 0;
+  background: #18181b;
+  transition: width 0.2s;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #71717a;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.answer {
+  position: relative;
+}
+
+.answer input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.answer label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  border: 2px solid #d4d4d8;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.answer input:checked + label {
+  border-color: #18181b;
+  background: #18181b;
+  color: white;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.navigation #nextBtn {
+  margin-left: auto;
+}
+
+.result-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  color: #71717a;
+  margin-bottom: 4px;
+}
+
+.type {
+  font-size: 4.5rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0 0 10px;
+}
+
+#typeName {
+  margin: 0 0 18px;
+}
+
+.scores {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e4e4e7;
+}
+
+.scores h3 {
+  margin-top: 0;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 45px;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.score-bar {
+  height: 9px;
+  background: #e4e4e7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  background: #18181b;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 26px 20px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  .answers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .scale-labels {
+    font-size: 0.75rem;
+  }
+
+  .type {
+    font-size: 3.5rem;
+  }
+
+  .score-row {
+    grid-template-columns: 85px 1fr 40px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section id="intro" class="card">
+      <h1>Test de Psicosofía</h1>
+      <p>Este test mide cuatro ejes independientes: <strong>Lógica, Emoción, Física y Voluntad</strong>.</p>
+      <p>Responde cada pregunta del 1 al 4 según cuánto te describa. No hay respuestas correctas o incorrectas.</p>
+      <button id="startBtn" class="primary">Comenzar</button>
+    </section>
+
+    <section id="test" class="card hidden">
+      <div class="progress-row">
+        <span id="questionNumber"></span>
+        <span id="progressPercent"></span>
+      </div>
+      <div class="progress-bar"><div id="progressFill"></div></div>
+      <h2 id="questionText"></h2>
+      <div class="scale">
+        <div class="scale-labels">
+          <span>1 — Nada / muy poco</span>
+          <span>4 — Mucho / totalmente</span>
+        </div>
+        <div id="answers" class="answers"></div>
+      </div>
+      <div class="navigation">
+        <button id="backBtn" class="secondary">Anterior</button>
+        <button id="nextBtn" class="primary">Siguiente</button>
+      </div>
+    </section>
+
+    <section id="result" class="card hidden">
+      <p class="result-label">Tu tipo</p>
+      <div id="type" class="type"></div>
+      <h2 id="typeName"></h2>
+      <p id="description"></p>
+      <div class="scores">
+        <h3>Puntuaciones</h3>
+        <div id="scoreList"></div>
+      </div>
+      <button id="restartBtn" class="secondary">Repetir el test</button>
+    </section>
+  </main>
+
+  <script>
+const descriptions = {
+  "LEFV": {
+    name: "Tipo LEFV",
+    text: "La descripción del tipo LEFV todavía no ha sido añadida."
+  },
+  "LEVF": {
+    name: "Tipo LEVF",
+    text: "La descripción del tipo LEVF todavía no ha sido añadida."
+  },
+  "LFEV": {
+    name: "Tipo LFEV",
+    text: "La descripción del tipo LFEV todavía no ha sido añadida."
+  },
+  "LFVE": {
+    name: "Tipo LFVE",
+    text: "La descripción del tipo LFVE todavía no ha sido añadida."
+  },
+  "LVEF": {
+    name: "Tipo LVEF",
+    text: "La descripción del tipo LVEF todavía no ha sido añadida."
+  },
+  "LVFE": {
+    name: "Tipo LVFE",
+    text: "La descripción del tipo LVFE todavía no ha sido añadida."
+  },
+  "ELFV": {
+    name: "Tipo ELFV",
+    text: "La descripción del tipo ELFV todavía no ha sido añadida."
+  },
+  "ELVF": {
+    name: "Tipo ELVF",
+    text: "La descripción del tipo ELVF todavía no ha sido añadida."
+  },
+  "EFLV": {
+    name: "Tipo EFLV",
+    text: "La descripción del tipo EFLV todavía no ha sido añadida."
+  },
+  "EFVL": {
+    name: "Tipo EFVL",
+    text: "La descripción del tipo EFVL todavía no ha sido añadida."
+  },
+  "EVLF": {
+    name: "Tipo EVLF",
+    text: "La descripción del tipo EVLF todavía no ha sido añadida."
+  },
+  "EVFL": {
+    name: "Tipo EVFL",
+    text: "La descripción del tipo EVFL todavía no ha sido añadida."
+  },
+  "FLEV": {
+    name: "Tipo FLEV",
+    text: "La descripción del tipo FLEV todavía no ha sido añadida."
+  },
+  "FLVE": {
+    name: "Tipo FLVE",
+    text: "La descripción del tipo FLVE todavía no ha sido añadida."
+  },
+  "FELV": {
+    name: "Tipo FELV",
+    text: "La descripción del tipo FELV todavía no ha sido añadida."
+  },
+  "FEVL": {
+    name: "Tipo FEVL",
+    text: "La descripción del tipo FEVL todavía no ha sido añadida."
+  },
+  "FVLE": {
+    name: "Tipo FVLE",
+    text: "La descripción del tipo FVLE todavía no ha sido añadida."
+  },
+  "FVEL": {
+    name: "Tipo FVEL",
+    text: "La descripción del tipo FVEL todavía no ha sido añadida."
+  },
+  "VLEF": {
+    name: "Tipo VLEF",
+    text: "La descripción del tipo VLEF todavía no ha sido añadida."
+  },
+  "VLFE": {
+    name: "Tipo VLFE",
+    text: "La descripción del tipo VLFE todavía no ha sido añadida."
+  },
+  "VELF": {
+    name: "Tipo VELF",
+    text: "La descripción del tipo VELF todavía no ha sido añadida."
+  },
+  "VEFL": {
+    name: "Tipo VEFL",
+    text: "La descripción del tipo VEFL todavía no ha sido añadida."
+  },
+  "VFLE": {
+    name: "Tipo VFLE",
+    text: "La descripción del tipo VFLE todavía no ha sido añadida."
+  },
+  "VFEL": {
+    name: "Tipo VFEL",
+    text: "La descripción del tipo VFEL todavía no ha sido añadida."
+  }
+};
+
+const questions = [
+  { text: "¿Te consideras una persona reflexiva?", axis: "L" },
+  { text: "¿Confías en tu mente?", axis: "L" },
+  { text: "¿Te irrita la estupidez?", axis: "L" },
+  { text: "¿Confías en la lógica?", axis: "L" },
+  { text: "¿Eres independiente en tu forma de pensar?", axis: "L" },
+  { text: "¿Subordinas tu vida a tus creencias?", axis: "L" },
+  { text: "¿Te interesa la información científica?", axis: "L" },
+  { text: "¿Disfrutas de las manifestaciones del pensamiento intenso?", axis: "L" },
+  { text: "¿Te sientes seguro durante las discusiones?", axis: "L" },
+  { text: "¿Crees tú mismo en el rigor de tus construcciones lógicas?", axis: "L" },
+
+  { text: "¿Te consideras una persona emocional?", axis: "E" },
+  { text: "¿Te gusta el teatro?", axis: "E" },
+  { text: "¿Eres amoroso?", axis: "E" },
+  { text: "¿Tu estado de ánimo cambia drásticamente?", axis: "E" },
+  { text: "¿Eres supersticioso?", axis: "E" },
+  { text: "¿Te controlan tus sentimientos?", axis: "E" },
+  { text: "¿Disfrutas de la actuación?", axis: "E" },
+  { text: "¿Sueles reaccionar con lágrimas ante las cosas?", axis: "E" },
+  { text: "¿Confías en la astrología?", axis: "E" },
+  { text: "¿Te apasiona el arte?", axis: "E" },
+
+  { text: "¿Te consideras una persona físicamente fuerte?", axis: "F" },
+  { text: "¿Eres tacaño?", axis: "F" },
+  { text: "¿Tienes ganas de hacer actividad física?", axis: "F" },
+  { text: "¿Eres propenso a la violencia?", axis: "F" },
+  { text: "¿El deporte ocupa un lugar importante en tu vida?", axis: "F" },
+  { text: "¿Te tomas el dinero en serio?", axis: "F" },
+  { text: "¿Eres posesivo?", axis: "F" },
+  { text: "¿Se te puede considerar un gourmet?", axis: "F" },
+  { text: "¿Te preocupa tu salud?", axis: "F" },
+  { text: "¿Eres sexual?", axis: "F" },
+
+  { text: "¿Te consideras una persona con carácter fuerte?", axis: "V" },
+  { text: "¿Te resulta fácil gestionar personas?", axis: "V" },
+  { text: "¿Eres una persona independiente?", axis: "V" },
+  { text: "¿Eres decidido?", axis: "V" },
+  { text: "¿Eres capaz de controlar tus impulsos en tu comportamiento?", axis: "V" },
+  { text: "¿Te consideras una persona persistente?", axis: "V" },
+  { text: "¿Siempre logras llevar a cabo las decisiones que tomas?", axis: "V" },
+  { text: "¿Eres una persona responsable?", axis: "V" },
+  { text: "¿Eres curioso?", axis: "V" },
+  { text: "¿Confías en tu derecho a liderar personas?", axis: "V" }
+];
+
+const axisNames = {
+  L: "Lógica",
+  E: "Emoción",
+  F: "Física",
+  V: "Voluntad"
+};
+
+// Desempate: F > E > V > L
+const tiePriority = {
+  F: 0,
+  E: 1,
+  V: 2,
+  L: 3
+};
+
+let currentQuestion = 0;
+let answers = Array(questions.length).fill(null);
+
+const intro = document.getElementById("intro");
+const test = document.getElementById("test");
+const result = document.getElementById("result");
+const questionNumber = document.getElementById("questionNumber");
+const progressPercent = document.getElementById("progressPercent");
+const progressFill = document.getElementById("progressFill");
+const questionText = document.getElementById("questionText");
+const answersContainer = document.getElementById("answers");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function renderQuestion() {
+  const question = questions[currentQuestion];
+  const number = currentQuestion + 1;
+  const percent = Math.round((number / questions.length) * 100);
+
+  questionNumber.textContent = `Pregunta ${number} de ${questions.length}`;
+  progressPercent.textContent = `${percent}%`;
+  progressFill.style.width = `${percent}%`;
+  questionText.textContent = question.text;
+
+  answersContainer.innerHTML = "";
+
+  for (let value = 1; value <= 4; value++) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "answer";
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "answer";
+    input.id = `answer-${value}`;
+    input.value = value;
+    input.checked = answers[currentQuestion] === value;
+
+    const label = document.createElement("label");
+    label.htmlFor = input.id;
+    label.textContent = value;
+
+    input.addEventListener("change", () => {
+      answers[currentQuestion] = value;
+    });
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(label);
+    answersContainer.appendChild(wrapper);
+  }
+
+  backBtn.disabled = currentQuestion === 0;
+  backBtn.style.opacity = currentQuestion === 0 ? "0.5" : "1";
+  nextBtn.textContent = currentQuestion === questions.length - 1 ? "Ver resultado" : "Siguiente";
+}
+
+function startTest() {
+  intro.classList.add("hidden");
+  result.classList.add("hidden");
+  test.classList.remove("hidden");
+  currentQuestion = 0;
+  answers = Array(questions.length).fill(null);
+  renderQuestion();
+}
+
+function goNext() {
+  if (answers[currentQuestion] === null) {
+    alert("Selecciona una respuesta antes de continuar.");
+    return;
+  }
+
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    renderQuestion();
+  }
+}
+
+function calculateScores() {
+  const scores = { L: 0, E: 0, F: 0, V: 0 };
+
+  questions.forEach((question, index) => {
+    scores[question.axis] += answers[index];
+  });
+
+  return scores;
+}
+
+function calculateType(scores) {
+  const axes = Object.keys(scores);
+
+  axes.sort((a, b) => {
+    if (scores[b] !== scores[a]) {
+      return scores[b] - scores[a];
+    }
+    return tiePriority[a] - tiePriority[b];
+  });
+
+  return axes.join("");
+}
+
+function showResult() {
+  const scores = calculateScores();
+  const type = calculateType(scores);
+  const info = descriptions[type] || {
+    name: "Descripción pendiente",
+    text: `La descripción del tipo ${type} todavía no se ha añadido.`
+  };
+
+  test.classList.add("hidden");
+  result.classList.remove("hidden");
+
+  document.getElementById("type").textContent = type;
+  document.getElementById("typeName").textContent = info.name;
+  document.getElementById("description").textContent = info.text;
+
+  const scoreList = document.getElementById("scoreList");
+  scoreList.innerHTML = "";
+
+  const sortedAxes = type.split("");
+
+  sortedAxes.forEach(axis => {
+    const row = document.createElement("div");
+    row.className = "score-row";
+
+    const name = document.createElement("span");
+    name.textContent = axisNames[axis];
+
+    const bar = document.createElement("div");
+    bar.className = "score-bar";
+
+    const fill = document.createElement("div");
+    fill.className = "score-fill";
+    fill.style.width = `${(scores[axis] / 40) * 100}%`;
+
+    const score = document.createElement("strong");
+    score.textContent = scores[axis];
+
+    bar.appendChild(fill);
+    row.appendChild(name);
+    row.appendChild(bar);
+    row.appendChild(score);
+    scoreList.appendChild(row);
+  });
+}
+
+document.getElementById("startBtn").addEventListener("click", startTest);
+nextBtn.addEventListener("click", goNext);
+backBtn.addEventListener("click", goBack);
+document.getElementById("restartBtn").addEventListener("click", startTest);
+
+  </script>
+</body>
+</html>
