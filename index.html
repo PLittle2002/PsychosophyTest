@@ -174,6 +174,37 @@ button:active {
   margin: 0 0 18px;
 }
 
+.type-image {
+  display: block;
+  width: min(100%, 420px);
+  max-height: 420px;
+  object-fit: contain;
+  margin: 8px auto 28px;
+  border-radius: 12px;
+}
+
+.description-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #e4e4e7;
+}
+
+.description-section h3 {
+  margin: 0 0 14px;
+}
+
+#description {
+  text-align: justify;
+  line-height: 1.75;
+}
+
+.docs-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: #18181b;
+  font-weight: bold;
+}
+
 .scores {
   margin-top: 32px;
   padding-top: 24px;
@@ -273,7 +304,18 @@ button:active {
       <p class="result-label">Tu tipo</p>
       <div id="type" class="type"></div>
       <h2 id="typeName"></h2>
-      <p id="description"></p>
+      <img id="typeImage" class="type-image" src="" alt="" hidden>
+
+      <div class="description-section">
+        <h3>Descripción completa</h3>
+        <p id="description"></p>
+        <a class="docs-link"
+           href="https://docs.google.com/document/d/1_32fLYbZU5026_H4PoeO6a0kJGHom21OoFEI_4ADcqY/edit?usp=sharing"
+           target="_blank" rel="noopener noreferrer">
+          Ver las descripciones completas de los 24 tipos →
+        </a>
+      </div>
+
       <div class="scores">
         <h3>Puntuaciones</h3>
         <div id="scoreList"></div>
@@ -565,6 +607,14 @@ function showResult() {
   document.getElementById("type").textContent = type;
   document.getElementById("typeName").textContent = info.name;
   document.getElementById("description").textContent = info.text;
+
+  const typeImage = document.getElementById("typeImage");
+  typeImage.src = `images/${type}.png`;
+  typeImage.alt = `Imagen del tipo ${type}`;
+  typeImage.hidden = false;
+  typeImage.onerror = () => {
+    typeImage.hidden = true;
+  };
 
   const scoreList = document.getElementById("scoreList");
   scoreList.innerHTML = "";
