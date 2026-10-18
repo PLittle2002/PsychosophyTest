@@ -675,6 +675,18 @@ nextBtn.addEventListener("click", goNext);
 backBtn.addEventListener("click", goBack);
 document.getElementById("restartBtn").addEventListener("click", startTest);
 
+const esBtn = document.getElementById("esBtn");
+const enBtn = document.getElementById("enBtn");
+
+esBtn.addEventListener("click", () => {
+  esBtn.classList.add("selected");
+  enBtn.classList.remove("selected");
+});
+
+enBtn.addEventListener("click", () => {
+  enBtn.classList.add("selected");
+  esBtn.classList.remove("selected");
+});
   </script>
 </body>
 </html>
