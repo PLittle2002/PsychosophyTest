@@ -603,10 +603,18 @@ const questions = [
 ];
 
 const axisNames = {
-  L: "Lógica",
-  E: "Emoción",
-  F: "Física",
-  V: "Voluntad"
+  es: {
+    L: "Lógica",
+    E: "Emoción",
+    F: "Física",
+    V: "Voluntad"
+  },
+  en: {
+    L: "Logic",
+    E: "Emotion",
+    F: "Physics",
+    V: "Will"
+  }
 };
 
 // Desempate: F > E > V > L
@@ -778,7 +786,7 @@ function showResult() {
     row.className = "score-row";
 
     const name = document.createElement("span");
-    name.textContent = axisNames[axis];
+    name.textContent = axisNames[currentLanguage][axis];
 
     const bar = document.createElement("div");
     bar.className = "score-bar";
