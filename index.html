@@ -669,18 +669,25 @@ function showResult() {
     scoreList.appendChild(row);
   });
 }
-  const esBtn = document.getElementById("esBtn");
-  const enBtn = document.getElementById("enBtn");
+const esBtn = document.getElementById("esBtn");
+const enBtn = document.getElementById("enBtn");
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
 
-  esBtn.addEventListener("click", () => {
-    esBtn.classList.add("selected");
-    enBtn.classList.remove("selected");
-  });
+esBtn.addEventListener("click", () => {
+  esBtn.classList.add("selected");
+  enBtn.classList.remove("selected");
+});
 
-  enBtn.addEventListener("click", () => {
-    enBtn.classList.add("selected");
-    esBtn.classList.remove("selected");
-  });
+enBtn.addEventListener("click", () => {
+  enBtn.classList.add("selected");
+  esBtn.classList.remove("selected");
+});
+
+startBtn.addEventListener("click", startTest);
+nextBtn.addEventListener("click", goNext);
+backBtn.addEventListener("click", goBack);
+restartBtn.addEventListener("click", startTest);
   </script>
 </body>
 </html>
