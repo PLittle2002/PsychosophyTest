@@ -292,9 +292,18 @@ button:active {
 <body>
   <main class="container">
     <section id="intro" class="card">
-      <h1>Test de Psicosofía</h1>
-      <p>Este test mide cuatro ejes de la personalidad: <strong>Lógica, Emoción, Física y Voluntad</strong>. El tipo de personalidad se define por el orden de prioridades entre estos cuatro ejes.</p>
-      <p>Responde cada pregunta del 1 al 4 según cuánto te describa. No hay respuestas correctas o incorrectas.</p>
+<h1 id="pageTitle">Test de Psicosofía</h1>
+
+<p id="introText">
+  Este test mide cuatro ejes de la personalidad:
+  <strong>Lógica, Emoción, Física y Voluntad</strong>.
+  El tipo de personalidad se define por el orden de prioridades entre estos cuatro ejes.
+</p>
+
+<p id="instructionsText">
+  Responde cada pregunta del 1 al 4 según cuánto te describa.
+  No hay respuestas correctas o incorrectas.
+</p>
       
       <div class="language-selector">
         <button id="esBtn" class="language-btn selected" type="button">🇪🇸 Español</button>
@@ -313,8 +322,8 @@ button:active {
       <h2 id="questionText"></h2>
       <div class="scale">
         <div class="scale-labels">
-          <span>1 — Nada / muy poco</span>
-          <span>4 — Mucho / totalmente</span>
+          <span id="scaleLow">1 — Nada / muy poco</span>
+          <span id="scaleHigh">4 — Mucho / totalmente</span>
         </div>
         <div id="answers" class="answers"></div>
       </div>
@@ -325,15 +334,15 @@ button:active {
     </section>
 
     <section id="result" class="card hidden">
-      <p class="result-label">Tu tipo</p>
+      <p id="resultLabel" class="result-label">Tu tipo</p>
       <div id="type" class="type"></div>
       <h2 id="typeName"></h2>
       <img id="typeImage" class="type-image" src="" alt="" hidden>
 
       <div class="description-section">
-        <h3>Descripción</h3>
+        <h3 id="descriptionHeading">Descripción</h3>
         <p id="description"></p>
-        <a class="docs-link"
+        <a id="docsLink" class="docs-link"
            href="https://docs.google.com/document/d/1_32fLYbZU5026_H4PoeO6a0kJGHom21OoFEI_4ADcqY/edit?usp=sharing"
            target="_blank" rel="noopener noreferrer">
           Ver las descripciones completas de los 24 tipos →
@@ -341,7 +350,7 @@ button:active {
       </div>
 
       <div class="scores">
-        <h3>Puntuaciones</h3>
+        <h3 id="scoresHeading">Puntuaciones</h3>
         <div id="scoreList"></div>
       </div>
       <button id="restartBtn" class="secondary">Repetir el test</button>
@@ -528,7 +537,8 @@ function renderQuestion() {
   const number = currentQuestion + 1;
   const percent = Math.round((number / questions.length) * 100);
 
-  questionNumber.textContent = `Pregunta ${number} de ${questions.length}`;
+  const t = interfaceText[currentLanguage];
+  questionNumber.textContent = `${t.question} ${number} ${t.of} ${questions.length}`;
   progressPercent.textContent = `${percent}%`;
   progressFill.style.width = `${percent}%`;
   questionText.textContent = question.text;
@@ -561,7 +571,9 @@ function renderQuestion() {
 
   backBtn.disabled = currentQuestion === 0;
   backBtn.style.opacity = currentQuestion === 0 ? "0.5" : "1";
-  nextBtn.textContent = currentQuestion === questions.length - 1 ? "Ver resultado" : "Siguiente";
+  nextBtn.textContent = currentQuestion === questions.length - 1
+    ? t.finishBtn
+    : t.nextBtn;
 }
 
 function startTest() {
@@ -575,7 +587,7 @@ function startTest() {
 
 function goNext() {
   if (answers[currentQuestion] === null) {
-    alert("Selecciona una respuesta antes de continuar.");
+    alert(interfaceText[currentLanguage].alert);
     return;
   }
 
@@ -669,19 +681,88 @@ function showResult() {
     scoreList.appendChild(row);
   });
 }
+
+let currentLanguage = "es";
+
 const esBtn = document.getElementById("esBtn");
 const enBtn = document.getElementById("enBtn");
-const startBtn = document.getElementById("startBtn");
-const restartBtn = document.getElementById("restartBtn");
+
+const interfaceText = {
+  es: {
+    pageTitle: "Test de Psicosofía",
+    introText: 'Este test mide cuatro ejes de la personalidad: <strong>Lógica, Emoción, Física y Voluntad</strong>. El tipo de personalidad se define por el orden de prioridades entre estos cuatro ejes.',
+    instructionsText: "Responde cada pregunta del 1 al 4 según cuánto te describa. No hay respuestas correctas o incorrectas.",
+    startBtn: "Comenzar",
+    scaleLow: "1 — Nada / muy poco",
+    scaleHigh: "4 — Mucho / totalmente",
+    backBtn: "Anterior",
+    nextBtn: "Siguiente",
+    finishBtn: "Ver resultado",
+    resultLabel: "Tu tipo",
+    descriptionHeading: "Descripción",
+    docsLink: "Ver las descripciones completas de los 24 tipos →",
+    scoresHeading: "Puntuaciones",
+    restartBtn: "Repetir el test",
+    question: "Pregunta",
+    of: "de",
+    alert: "Selecciona una respuesta antes de continuar."
+  },
+
+  en: {
+    pageTitle: "Psychosophy Test",
+    introText: 'This test measures four aspects of personality: <strong>Logic, Emotion, Physics, and Will</strong>. Your personality type is determined by the priority order of these four aspects.',
+    instructionsText: "Answer each question from 1 to 4 according to how well it describes you. There are no right or wrong answers.",
+    startBtn: "Start",
+    scaleLow: "1 — Not at all / very little",
+    scaleHigh: "4 — A lot / completely",
+    backBtn: "Back",
+    nextBtn: "Next",
+    finishBtn: "See results",
+    resultLabel: "Your type",
+    descriptionHeading: "Description",
+    docsLink: "Read the full descriptions of all 24 types →",
+    scoresHeading: "Scores",
+    restartBtn: "Retake the test",
+    question: "Question",
+    of: "of",
+    alert: "Please select an answer before continuing."
+  }
+};
+
+function applyLanguage() {
+  const t = interfaceText[currentLanguage];
+
+  document.documentElement.lang = currentLanguage;
+
+  Object.keys(t).forEach(key => {
+    const element = document.getElementById(key);
+
+    if (element) {
+      if (key === "introText") {
+        element.innerHTML = t[key];
+      } else {
+        element.textContent = t[key];
+      }
+    }
+  });
+
+  esBtn.classList.toggle("selected", currentLanguage === "es");
+  enBtn.classList.toggle("selected", currentLanguage === "en");
+
+  // Actualiza también la pregunta y la navegación si el test está abierto.
+  if (!document.getElementById("test").classList.contains("hidden")) {
+    renderQuestion();
+  }
+}
 
 esBtn.addEventListener("click", () => {
-  esBtn.classList.add("selected");
-  enBtn.classList.remove("selected");
+  currentLanguage = "es";
+  applyLanguage();
 });
 
 enBtn.addEventListener("click", () => {
-  enBtn.classList.add("selected");
-  esBtn.classList.remove("selected");
+  currentLanguage = "en";
+  applyLanguage();
 });
 
 startBtn.addEventListener("click", startTest);
