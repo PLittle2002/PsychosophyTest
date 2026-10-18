@@ -602,6 +602,56 @@ const questions = [
   { text: "¿Confías en tu derecho a liderar personas?", axis: "V" }
 ];
 
+const questionsEn = [
+  // Logic (L)
+  { text: "Do you consider yourself a thoughtful person?", axis: "L" },
+  { text: "Do you trust your mind?", axis: "L" },
+  { text: "Does stupidity irritate you?", axis: "L" },
+  { text: "Do you trust logic?", axis: "L" },
+  { text: "Are you independent in your thinking?", axis: "L" },
+  { text: "Do you subordinate your life to your beliefs?", axis: "L" },
+  { text: "Are you interested in scientific information?", axis: "L" },
+  { text: "Do you enjoy thinking intensely or deeply?", axis: "L" },
+  { text: "Do you feel confident during discussions?", axis: "L" },
+  { text: "Do you trust the rigour of your own logical constructions?", axis: "L" },
+
+  // Emotion (E)
+  { text: "Do you consider yourself an emotional person?", axis: "E" },
+  { text: "Do you like theatre?", axis: "E" },
+  { text: "Are you affectionate?", axis: "E" },
+  { text: "Does your mood change dramatically?", axis: "E" },
+  { text: "Are you superstitious?", axis: "E" },
+  { text: "Are you controlled by your feelings?", axis: "E" },
+  { text: "Do you enjoy acting?", axis: "E" },
+  { text: "Do you tend to react to things by crying?", axis: "E" },
+  { text: "Do you trust astrology?", axis: "E" },
+  { text: "Are you passionate about art?", axis: "E" },
+
+  // Physics (F)
+  { text: "Do you consider yourself physically strong?", axis: "F" },
+  { text: "Are you stingy?", axis: "F" },
+  { text: "Do you feel like engaging in physical activity?", axis: "F" },
+  { text: "Are you prone to violence?", axis: "F" },
+  { text: "Does sport play an important role in your life?", axis: "F" },
+  { text: "Do you take money seriously?", axis: "F" },
+  { text: "Are you possessive?", axis: "F" },
+  { text: "Would you consider yourself a gourmet?", axis: "F" },
+  { text: "Are you concerned about your health?", axis: "F" },
+  { text: "Are you a sexual person?", axis: "F" },
+
+  // Will (V)
+  { text: "Do you think you have a strong personality?", axis: "V" },
+  { text: "Do you find it easy to manage people?", axis: "V" },
+  { text: "Are you an independent person?", axis: "V" },
+  { text: "Are you decisive?", axis: "V" },
+  { text: "Can you control your impulses and behaviour?", axis: "V" },
+  { text: "Would you consider yourself persistent?", axis: "V" },
+  { text: "Do you always manage to follow through on your decisions?", axis: "V" },
+  { text: "Are you a responsible person?", axis: "V" },
+  { text: "Are you curious?", axis: "V" },
+  { text: "Do you believe you have the right to lead people?", axis: "V" }
+];
+
 const axisNames = {
   es: {
     L: "Lógica",
@@ -640,12 +690,18 @@ const backBtn = document.getElementById("backBtn");
 const nextBtn = document.getElementById("nextBtn");
 
 function renderQuestion() {
-  const question = questions[currentQuestion];
+  const questionSet =
+  currentLanguage === "en" ? questionsEn : questions;
+
+  const question = questionSet[currentQuestion];
   const number = currentQuestion + 1;
   const percent = Math.round((number / questions.length) * 100);
 
   const t = interfaceText[currentLanguage];
-  questionNumber.textContent = `${t.question} ${number} ${t.of} ${questions.length}`;
+  questionNumber.textContent =
+  currentLanguage === "en"
+    ? `Question ${number} of ${questions.length}`
+    : `Pregunta ${number} de ${questions.length}`;
   progressPercent.textContent = `${percent}%`;
   progressFill.style.width = `${percent}%`;
   questionText.textContent = question.text;
