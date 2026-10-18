@@ -79,6 +79,24 @@ button:active {
   color: #18181b;
 }
 
+.language-selector {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.language-btn {
+  background: #e4e4e7;
+  color: #18181b;
+  border: 2px solid #e4e4e7;
+}
+
+.language-btn.selected {
+  background: #18181b;
+  color: white;
+  border-color: #18181b;
+}
+
 .progress-row {
   display: flex;
   justify-content: space-between;
@@ -277,6 +295,12 @@ button:active {
       <h1>Test de Psicosofía</h1>
       <p>Este test mide cuatro ejes de la personalidad: <strong>Lógica, Emoción, Física y Voluntad</strong>. El tipo de personalidad se define por el orden de prioridades entre estos cuatro ejes.</p>
       <p>Responde cada pregunta del 1 al 4 según cuánto te describa. No hay respuestas correctas o incorrectas.</p>
+      
+      <div class="language-selector">
+        <button id="esBtn" class="language-btn selected" type="button">🇪🇸 Español</button>
+        <button id="enBtn" class="language-btn" type="button">🇬🇧 English</button>
+      </div>
+      
       <button id="startBtn" class="primary">Comenzar</button>
     </section>
 
