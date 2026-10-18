@@ -301,7 +301,7 @@ button:active {
         <button id="enBtn" class="language-btn" type="button">🇬🇧 English</button>
       </div>
       
-      <button id="startBtn" class="primary">Comenzar</button>
+      <button id="startBtn" class="primary" type="button">Comenzar</button>
     </section>
 
     <section id="test" class="card hidden">
@@ -681,8 +681,6 @@ function showResult() {
     enBtn.classList.add("selected");
     esBtn.classList.remove("selected");
   });
-
-  document.getElementById("startBtn").addEventListener("click", startTest);
   </script>
 </body>
 </html>
